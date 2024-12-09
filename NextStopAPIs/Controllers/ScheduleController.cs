@@ -158,6 +158,29 @@ namespace NextStopAPIs.Controllers
             }
         }
 
+        [HttpGet("operator/{operatorId}")]
+        [Authorize(Roles = "operator,admin")]
+        public async Task<IActionResult> GetSchedulesByOperatorId(int operatorId)
+        {
+            try
+            {
+                var schedules = await _scheduleService.GetSchedulesByOperatorId(operatorId);
+
+                if (schedules == null || !schedules.Any())
+                {
+                    return NotFound($"No schedules found for operator ID {operatorId}.");
+                }
+
+                return Ok(schedules);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error fetching schedules for operator ID {operatorId}", ex);
+                return StatusCode(500, "An error occurred while fetching schedules for the operator.");
+            }
+        }
+
+
 
     }
 }

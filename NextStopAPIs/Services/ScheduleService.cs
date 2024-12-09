@@ -209,5 +209,27 @@ namespace NextStopAPIs.Services
                     : new List<ScheduleSeatDTO>()
             };
         }
+
+        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByOperatorId(int operatorId)
+        {
+            try
+            {
+                var schedules = await _context.Schedules
+                    .Include(s => s.Bus) // Include related bus information
+                    .ThenInclude(b => b.Operator) // Ensure operator data is loaded
+                    .Include(s => s.Route) // Include related route information
+                    .Include(s => s.ScheduleSeats)
+                        .ThenInclude(ss => ss.Seat) // Include seat information
+                    .Where(s => s.Bus.OperatorId == operatorId) // Filter schedules by operator ID
+                    .ToListAsync();
+
+                return schedules.Select(MapToScheduleDTO); // Map to DTO
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching schedules for operator ID {operatorId}: {ex.Message}");
+            }
+        }
+
     }
 }

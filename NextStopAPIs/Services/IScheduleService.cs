@@ -11,5 +11,6 @@ namespace NextStopAPIs.Services
         Task<ScheduleDTO> CreateSchedule(CreateScheduleDTO createScheduleDTO);
         Task<ScheduleDTO> UpdateSchedule(int scheduleId, UpdateScheduleDTO updateScheduleDTO);
         Task<ScheduleDTO> DeleteSchedule(int scheduleId);
+        Task<IEnumerable<ScheduleDTO>> GetSchedulesByOperatorId(int operatorId);
     }
 }

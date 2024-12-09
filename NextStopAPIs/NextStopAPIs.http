@@ -1,0 +1,6 @@
+@NextStopAPIs_HostAddress = http://localhost:5032
+
+GET {{NextStopAPIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

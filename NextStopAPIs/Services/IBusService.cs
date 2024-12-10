@@ -13,5 +13,6 @@ namespace NextStopAPIs.Services
         Task<bool> BusNumberUnique(string busNumber);
         Task<IEnumerable<SeatDTO>> GetSeatsByBusId(int busId);
         Task<IEnumerable<ScheduleSeatDTO>> GetScheduleSeatsByScheduleId(int scheduleId);
+        Task<UserDTO> GetOperatorByBusId(int busId);
     }
 }

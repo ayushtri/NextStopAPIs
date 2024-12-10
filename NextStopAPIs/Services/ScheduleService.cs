@@ -20,6 +20,7 @@ namespace NextStopAPIs.Services
             {
                 var schedule = await _context.Schedules
                     .Include(s => s.Bus)
+                        .ThenInclude(b => b.Operator)
                     .Include(s => s.Route)
                     .Include(s => s.ScheduleSeats)
                         .ThenInclude(ss => ss.Seat)
@@ -42,6 +43,7 @@ namespace NextStopAPIs.Services
             {
                 var schedules = await _context.Schedules
                     .Include(s => s.Bus)
+                        .ThenInclude(b => b.Operator)
                     .Include(s => s.Route)
                     .Include(s => s.ScheduleSeats)
                         .ThenInclude(ss => ss.Seat)
@@ -62,6 +64,7 @@ namespace NextStopAPIs.Services
                 var schedules = await _context.Schedules
                     .Where(s => s.RouteId == routeId)
                     .Include(s => s.Bus)
+                        .ThenInclude(b => b.Operator)
                     .Include(s => s.Route)
                     .Include(s => s.ScheduleSeats)
                         .ThenInclude(ss => ss.Seat)
@@ -82,6 +85,7 @@ namespace NextStopAPIs.Services
                 var schedules = await _context.Schedules
                     .Where(s => s.BusId == busId)
                     .Include(s => s.Bus)
+                        .ThenInclude (b => b.Operator)
                     .Include(s => s.Route)
                     .Include(s => s.ScheduleSeats)
                         .ThenInclude(ss => ss.Seat)
@@ -192,7 +196,10 @@ namespace NextStopAPIs.Services
             {
                 ScheduleId = schedule.ScheduleId,
                 BusId = schedule.BusId,
+                BusNumber = schedule.Bus != null ? schedule.Bus.BusNumber : "Unknown Bus Number", // Map BusNumber
                 BusName = schedule.Bus != null ? schedule.Bus.BusName : "Unknown Bus",
+                OperatorId = schedule.Bus?.OperatorId ?? 0, // Map OperatorId
+                OperatorName = schedule.Bus?.Operator?.Name ?? "Unknown Operator", // Map OperatorName
                 RouteId = schedule.RouteId,
                 Origin = schedule.Route != null ? schedule.Route.Origin : "Unknown Origin",
                 Destination = schedule.Route != null ? schedule.Route.Destination : "Unknown Destination",
@@ -209,6 +216,7 @@ namespace NextStopAPIs.Services
                     : new List<ScheduleSeatDTO>()
             };
         }
+
 
         public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByOperatorId(int operatorId)
         {

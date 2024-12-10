@@ -259,6 +259,42 @@ namespace NextStopAPIs.Services
             }
         }
 
+        public async Task<UserDTO> GetOperatorByBusId(int busId)
+        {
+            try
+            {
+                // Fetch the bus with the operator information
+                var bus = await _context.Buses
+                    .Include(b => b.Operator) // Include operator navigation property
+                    .FirstOrDefaultAsync(b => b.BusId == busId);
+
+                // Check if the bus exists
+                if (bus == null)
+                    return null;
+
+                // Check if the operator exists
+                if (bus.Operator == null)
+                    throw new Exception($"No operator found for BusId: {busId}");
+
+                // Map the operator (User) to UserDTO
+                return new UserDTO
+                {
+                    UserId = bus.Operator.UserId,
+                    Name = bus.Operator.Name,
+                    Email = bus.Operator.Email,
+                    Phone = bus.Operator.Phone,
+                    Address = bus.Operator.Address,
+                    Role = bus.Operator.Role,
+                    IsActive = bus.Operator.IsActive
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching operator for BusId {busId}: {ex.Message}");
+            }
+        }
+
+
 
         private static BusDTO MapToBusDTO(Bus bus)
         {

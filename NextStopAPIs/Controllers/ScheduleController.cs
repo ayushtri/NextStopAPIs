@@ -146,19 +146,31 @@ namespace NextStopAPIs.Controllers
 
                 if (schedule == null)
                 {
-                    return NotFound($"Schedule with ID {id} not found.");
+                    return NotFound(new ScheduleDeleteResponseDTO
+                    {
+                        Success = false,
+                        Message = $"Schedule with ID {id} not found."
+                    });
                 }
 
-                return Ok($"Schedule with ID {id} deleted successfully.");
+                return Ok(new ScheduleDeleteResponseDTO
+                {
+                    Success = true,
+                    Message = $"Schedule with ID {id} deleted successfully."
+                });
             }
             catch (Exception ex)
             {
                 _logger.Error($"Error deleting schedule with ID {id}", ex);
-                return StatusCode(500, "An error occurred while deleting the schedule.");
+                return StatusCode(500, new ScheduleDeleteResponseDTO
+                {
+                    Success = false,
+                    Message = "An error occurred while deleting the schedule."
+                });
             }
         }
 
-        [HttpGet("operator/{operatorId}")]
+        [HttpGet("GetSchedulesByOperatorId/{operatorId}")]
         [Authorize(Roles = "operator,admin")]
         public async Task<IActionResult> GetSchedulesByOperatorId(int operatorId)
         {

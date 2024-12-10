@@ -214,5 +214,30 @@ namespace NextStopAPIs.Controllers
                 return StatusCode(500, "An error occurred while fetching scheduled seats for the schedule.");
             }
         }
+
+        [HttpGet("GetOperatorByBusId/{busId}")]
+        [Authorize(Roles = "operator,admin")]
+        public async Task<IActionResult> GetOperatorByBusId(int busId)
+        {
+            try
+            {
+                // Fetch the operator details for the given bus
+                var operatorDetails = await _busService.GetOperatorByBusId(busId);
+
+                // Check if the operator details are null
+                if (operatorDetails == null)
+                {
+                    return NotFound($"No operator found for Bus ID {busId}.");
+                }
+
+                return Ok(operatorDetails);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error fetching operator for Bus ID {busId}", ex);
+                return StatusCode(500, "An error occurred while fetching the operator details.");
+            }
+        }
+
     }
 }

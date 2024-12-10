@@ -221,7 +221,11 @@ namespace UnitTesting
             var notFoundResult = result as NotFoundObjectResult;
             Assert.IsNotNull(notFoundResult);
             Assert.AreEqual(404, notFoundResult.StatusCode);
-            Assert.AreEqual($"Schedule with ID {scheduleId} not found.", notFoundResult.Value);
+
+            var response = notFoundResult.Value as ScheduleDeleteResponseDTO;
+            Assert.IsNotNull(response);
+            Assert.IsFalse(response.Success);
+            Assert.AreEqual($"Schedule with ID {scheduleId} not found.", response.Message);
         }
 
         [Test]
@@ -239,7 +243,11 @@ namespace UnitTesting
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
-            Assert.AreEqual($"Schedule with ID {scheduleId} deleted successfully.", okResult.Value);
+
+            var response = okResult.Value as ScheduleDeleteResponseDTO;
+            Assert.IsNotNull(response);
+            Assert.IsTrue(response.Success);
+            Assert.AreEqual($"Schedule with ID {scheduleId} deleted successfully.", response.Message);
         }
     }
 }

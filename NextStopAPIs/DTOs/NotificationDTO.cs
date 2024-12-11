@@ -9,5 +9,6 @@ namespace NextStopAPIs.DTOs
         public string Message { get; set; }
         public DateTime SentDate { get; set; }
         public NotificationTypeEnum NotificationType { get; set; }
+        public bool IsRead { get; set; }
     }
 }

@@ -23,5 +23,7 @@ namespace NextStopAPIs.Models
         [Required]
         [StringLength(50)]
         public NotificationTypeEnum NotificationType { get; set; }
+
+        public bool IsRead { get; set; } = false;
     }
 }

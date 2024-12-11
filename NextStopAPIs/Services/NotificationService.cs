@@ -57,7 +57,8 @@ namespace NextStopAPIs.Services
                     UserId = n.UserId,
                     Message = n.Message,
                     SentDate = n.SentDate,
-                    NotificationType = n.NotificationType
+                    NotificationType = n.NotificationType,
+                    IsRead = n.IsRead
                 });
             }
             catch (Exception ex)
@@ -65,5 +66,40 @@ namespace NextStopAPIs.Services
                 throw new Exception($"Error fetching notifications: {ex.Message}");
             }
         }
+
+        public async Task<NotificationResponseDTO> MarkNotificationAsRead(int notificationId)
+        {
+            try
+            {
+                var notification = await _context.Notifications
+                    .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+
+                if (notification == null)
+                {
+                    return null; // Notification not found
+                }
+
+                // Mark as read and save changes
+                notification.IsRead = true;
+                await _context.SaveChangesAsync();
+
+                // Map the updated notification to NotificationResponseDTO
+                var notificationResponse = new NotificationResponseDTO
+                {
+                    NotificationId = notification.NotificationId,
+                    Message = notification.Message,
+                    IsRead = notification.IsRead,
+                    Timestamp = notification.SentDate
+                };
+
+                return notificationResponse;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error marking notification as read: {ex.Message}");
+            }
+        }
+
+
     }
 }

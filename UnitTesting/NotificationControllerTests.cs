@@ -39,6 +39,12 @@ namespace UnitTesting
                 NotificationType = NotificationTypeEnum.Email // Use enum directly
             };
 
+            var expectedResponse = new NotifResDTO
+            {
+                Success = true,
+                Message = "Notification sent successfully."
+            };
+
             _notificationServiceMock.Setup(n => n.SendNotification(sendNotificationDto)).ReturnsAsync(true);
 
             // Act
@@ -48,7 +54,12 @@ namespace UnitTesting
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
-            Assert.AreEqual("Notification sent successfully.", okResult.Value);
+
+            // Assert using DTO properties
+            var actualResponse = okResult.Value as NotifResDTO;
+            Assert.IsNotNull(actualResponse);
+            Assert.AreEqual(expectedResponse.Success, actualResponse.Success);
+            Assert.AreEqual(expectedResponse.Message, actualResponse.Message);
         }
 
         [Test]
@@ -59,7 +70,7 @@ namespace UnitTesting
             {
                 UserId = 1,
                 Message = "Test Notification",
-                NotificationType = NotificationTypeEnum.Email // Use enum directly
+                NotificationType = NotificationTypeEnum.Email
             };
 
             _notificationServiceMock.Setup(n => n.SendNotification(sendNotificationDto)).ReturnsAsync(false);
@@ -69,9 +80,15 @@ namespace UnitTesting
 
             // Assert
             var badRequestResult = result as BadRequestObjectResult;
-            Assert.IsNotNull(badRequestResult);
-            Assert.AreEqual(400, badRequestResult.StatusCode);
-            Assert.AreEqual("Failed to send notification.", badRequestResult.Value);
+            Assert.IsNotNull(badRequestResult, "Expected BadRequestObjectResult but got null");
+
+            if (badRequestResult != null)
+            {
+                var responseDto = badRequestResult.Value as NotifResDTO;
+                Assert.IsNotNull(responseDto, "Expected NotifResDTO but got null");
+                Assert.IsFalse(responseDto.Success);
+                Assert.AreEqual("Failed to send notification.", responseDto.Message);
+            }
         }
 
         [Test]

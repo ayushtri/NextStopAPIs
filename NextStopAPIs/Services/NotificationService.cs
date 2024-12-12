@@ -83,7 +83,6 @@ namespace NextStopAPIs.Services
                 notification.IsRead = true;
                 await _context.SaveChangesAsync();
 
-                // Map the updated notification to NotificationResponseDTO
                 var notificationResponse = new NotificationResponseDTO
                 {
                     NotificationId = notification.NotificationId,

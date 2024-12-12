@@ -85,7 +85,11 @@ namespace NextStopAPIs.Controllers
                 var user = await _userService.GetUserByEmailAndPassword(loginDTO.Email, loginDTO.Password);
                 if (user == null)
                 {
-                    return Unauthorized("Invalid email or password.");
+                    return Unauthorized(new UnauthResponseDTO { message = "Invalid email or password." });
+                }
+                if (!user.IsActive)
+                {
+                    return Unauthorized(new UnauthResponseDTO { message = "User account is deactivated." });
                 }
 
                 var tokenDTO = new TokenDTO

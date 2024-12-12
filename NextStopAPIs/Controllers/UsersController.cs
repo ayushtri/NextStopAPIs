@@ -148,7 +148,7 @@ namespace NextStopEndAPIs.Controllers
         }
 
         [Authorize]
-        [HttpDelete("DeleteUser/{id}")]
+        [HttpPost("DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             try
@@ -184,7 +184,7 @@ namespace NextStopEndAPIs.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPut("reactivate/{id}")]
+        [HttpGet("reactivate/{id}")]
         public async Task<IActionResult> ReactivateUser(int id)
         {
             try

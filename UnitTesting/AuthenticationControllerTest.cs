@@ -116,7 +116,9 @@ namespace UnitTesting
                 Password = "InvalidPassword"
             };
 
-            _userServiceMock.Setup(u => u.GetUserByEmailAndPassword(loginDTO.Email, loginDTO.Password)).ReturnsAsync((UserDTO)null);
+            _userServiceMock
+                .Setup(u => u.GetUserByEmailAndPassword(loginDTO.Email, loginDTO.Password))
+                .ReturnsAsync((UserDTO)null);
 
             // Act
             var result = await _controller.Login(loginDTO);
@@ -125,8 +127,13 @@ namespace UnitTesting
             var unauthorizedResult = result as UnauthorizedObjectResult;
             Assert.IsNotNull(unauthorizedResult);
             Assert.AreEqual(401, unauthorizedResult.StatusCode);
-            Assert.AreEqual("Invalid email or password.", unauthorizedResult.Value);
+
+            // Validate the response body
+            var responseValue = unauthorizedResult.Value as UnauthResponseDTO;
+            Assert.IsNotNull(responseValue);
+            Assert.AreEqual("Invalid email or password.", responseValue.message);
         }
+
 
         [Test]
         public async Task Login_Success_ReturnsJwtToken()
@@ -142,7 +149,8 @@ namespace UnitTesting
             {
                 UserId = 1,
                 Email = "test@example.com",
-                Role = "user"
+                Role = "user",
+                IsActive = true,
             };
 
             _userServiceMock.Setup(u => u.GetUserByEmailAndPassword(loginDTO.Email, loginDTO.Password)).ReturnsAsync(userDTO);

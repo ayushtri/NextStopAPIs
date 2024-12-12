@@ -14,6 +14,6 @@ namespace NextStopAPIs.Services
         Task<bool> IsEmailUnique(string email);
         Task<UserDTO> GetUserByEmailAndPassword(string email, string password);
         Task ResetEmail(int userId, string newEmail);
-        Task ResetPassword(int userId, string newPassword);
+        Task ResetPassword(string email, string newPassword);
     }
 }

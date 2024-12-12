@@ -181,7 +181,7 @@ namespace UnitTesting
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+              new Claim(ClaimTypes.NameIdentifier, userId.ToString())
             };
             var identity = new ClaimsIdentity(claims);
             var principal = new ClaimsPrincipal(identity);
@@ -199,7 +199,12 @@ namespace UnitTesting
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
-            Assert.AreEqual("Email reset successfully.", okResult.Value);
+
+            // Update assertion to match the new response structure
+            var response = okResult.Value as UserResponseDTO;
+            Assert.IsNotNull(response);
+            Assert.True(response.Success);
+            Assert.AreEqual("Email reset successfully.", response.Message);
         }
 
         [Test]

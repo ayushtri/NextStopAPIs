@@ -239,7 +239,11 @@ namespace NextStopEndAPIs.Controllers
                 }
 
                 await _userService.ResetEmail(id, newEmail);
-                return Ok("Email reset successfully.");
+                return Ok(new UserResponseDTO
+                {
+                    Success = true,
+                    Message = "Email reset successfully."
+                }); 
             }
             catch (Exception ex)
             {
@@ -248,40 +252,39 @@ namespace NextStopEndAPIs.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPut("reset-password/{id}")]
-        public async Task<IActionResult> ResetPassword(int id, [FromBody] string newPassword)
+        [HttpPut("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDto)
         {
             try
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userEmail = resetPasswordDto.Email;
+                var newPassword = resetPasswordDto.NewPassword;
 
-                if (userIdClaim == null)
+                if (string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(newPassword))
                 {
-                    return Unauthorized("User ID claim is missing.");
+                    return BadRequest("Email and new password must be provided.");
                 }
 
-                var userId = int.Parse(userIdClaim.Value);
-
-                if (id != userId && !User.IsInRole("admin"))
-                {
-                    return Forbid(); 
-                }
-
-                var existingUser = await _userService.GetUserById(id);
+                var existingUser = await _userService.GetUserByEmail(userEmail);
                 if (existingUser == null)
                 {
-                    return NotFound($"User with ID {id} not found.");
+                    return NotFound($"User with email {userEmail} not found.");
                 }
 
-                await _userService.ResetPassword(id, newPassword);
-                return Ok("Password reset successfully.");
+                await _userService.ResetPassword(userEmail, newPassword);
+
+                return Ok(new UserResponseDTO
+                {
+                    Success = true,
+                    Message = "Password reset successfully."
+                });
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error resetting password for user {id}", ex); 
+                _logger.Error($"Error resetting password for email {resetPasswordDto.Email}", ex);
                 return StatusCode(500, "An error occurred while resetting the password.");
             }
         }
+
     }
 }

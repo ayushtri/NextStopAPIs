@@ -298,11 +298,11 @@ namespace NextStopAPIs.Services
         }
 
 
-        public async Task ResetPassword(int userId, string newPassword)
+        public async Task ResetPassword(string email, string newPassword)
         {
             try
             {
-                var user = await _context.Users.FindAsync(userId);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
                 if (user == null)
                 {
                     return;
@@ -318,5 +318,6 @@ namespace NextStopAPIs.Services
                 throw new Exception($"Error resetting password: {ex.Message}");
             }
         }
+
     }
 }

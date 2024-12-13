@@ -89,10 +89,10 @@ namespace NextStopEndAPIs.Controllers
 
                 var userId = int.Parse(userIdClaim.Value);
 
-                if (id != userId && !User.IsInRole("admin"))
-                {
-                    return Forbid(); 
-                }
+                //if (id != userId && !User.IsInRole("admin"))
+                //{
+                //    return Forbid(); 
+                //}
 
                 var user = await _userService.GetUserById(id);
 

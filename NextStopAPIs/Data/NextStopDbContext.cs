@@ -84,5 +84,6 @@ namespace NextStopAPIs.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<SeatLog> SeatLogs { get; set; }
         public DbSet<ScheduleSeats> ScheduleSeats { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
     }
 }

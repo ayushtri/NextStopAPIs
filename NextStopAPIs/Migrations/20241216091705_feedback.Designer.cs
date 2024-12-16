@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NextStopAPIs.Data;
 
@@ -11,9 +12,11 @@ using NextStopAPIs.Data;
 namespace NextStopAPIs.Migrations
 {
     [DbContext(typeof(NextStopDbContext))]
-    partial class NextStopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241216091705_feedback")]
+    partial class feedback
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

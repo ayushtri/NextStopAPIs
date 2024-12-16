@@ -42,7 +42,7 @@ namespace NextStopAPIs
             builder.Services.AddScoped<IRouteService, RouteService>();
             builder.Services.AddScoped<IScheduleService, ScheduleService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
-
+            builder.Services.AddScoped<IFeedbackService, FeedbackService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();

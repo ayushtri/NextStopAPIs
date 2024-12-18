@@ -25,7 +25,8 @@ namespace NextStopAPIs.Services
                           join bus in _context.Buses on schedule.BusId equals bus.BusId
                           where route.Origin == searchBusDto.Origin
                           && route.Destination == searchBusDto.Destination
-                          && schedule.Date.Date == searchBusDto.TravelDate.Date
+                          // Ensure the travel date matches the schedule's date (ignoring time)
+                          && schedule.DepartureTime.Date == searchBusDto.TravelDate.Date
                           select new BusSearchResultDTO
                           {
                               ScheduleId = schedule.ScheduleId,
@@ -44,6 +45,7 @@ namespace NextStopAPIs.Services
 
             return await results.ToListAsync();
         }
+
 
 
         public async Task<BookingDTO> BookTicket(BookTicketDTO bookTicketDto)

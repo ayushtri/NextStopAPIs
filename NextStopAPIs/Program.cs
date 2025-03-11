@@ -46,7 +46,7 @@ namespace NextStopAPIs
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
-
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

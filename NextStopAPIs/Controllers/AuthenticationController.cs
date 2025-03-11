@@ -13,13 +13,15 @@ namespace NextStopAPIs.Controllers
     {
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
+        private readonly IEmailService _emailService;
         private readonly ILog _logger;
 
-        public AuthenticationController(IUserService userService, ITokenService tokenService, ILog logger)
+        public AuthenticationController(IUserService userService, ITokenService tokenService, ILog logger, IEmailService emailService)
         {
             _userService = userService;
             _tokenService = tokenService;
             _logger = logger;
+            _emailService = emailService;
         }
 
         [HttpPost("register")]
@@ -65,6 +67,14 @@ namespace NextStopAPIs.Controllers
                     JwtToken = jwtToken,
                     RefreshToken = refreshToken
                 };
+
+                // **Send Registration Confirmation Email**
+                var subject = "Welcome to NextStop - Registration Successful";
+                var body = $"<h2>Hello {createdUser.Name},</h2>" +
+                           "<p>Your registration was successful! You can now log in to your account.</p>" +
+                           "<p>Thank you for joining NextStop!</p>";
+
+                await _emailService.SendEmailAsync(createdUser.Email, subject, body);
 
                 return Ok(registerResponse);
             }
